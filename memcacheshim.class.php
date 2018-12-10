@@ -154,7 +154,7 @@ class MemcacheShim
     public function connect($host, $port = 11211, $timeout = 0)
     {
         $this->addServer($host, $port);
-        return $this->is_connected($host, $port);
+        return $this->server_is_connected($host, $port);
     }
 
     /**
