@@ -62,7 +62,7 @@ class MemcacheShim
      */
     private function server_is_in_pool($host, $port)
     {
-        $existing = $this->_memcached->getServerList(); 
+        $existing = $this->_memcached->getServerList();
         if (is_array($existing)) {
             foreach ($existing as $e) {
                 if($e['host'] == $host and $e['port'] == $port) {
@@ -169,7 +169,7 @@ class MemcacheShim
     {
         return $this->connect($host, $port, $timeout);
     }
-    
+
     /**
      * Decrement item's value
      *
@@ -183,6 +183,22 @@ class MemcacheShim
         return $this->_memcached->get($key) === false
              ? false
              : $this->_memcached->decrement($key, $value)
+             ;
+    }
+
+    /**
+     * Increment item's value
+     *
+     * @param string $key
+     * @param int $value
+     *
+     * @return mixed item's new value on success or FALSE on failure.
+     */
+    public function increment($key, $value = 1)
+    {
+        return $this->_memcached->get($key) === false
+             ? false
+             : $this->_memcached->increment($key, $value)
              ;
     }
 
@@ -207,7 +223,7 @@ class MemcacheShim
     public function flush()
     {
         return $this->_memcached->flush();
-    }     
+    }
 
     /**
      * Retrieve item from the server
@@ -333,6 +349,6 @@ class MemcacheShim
                                 $timeout,
                                 $retry_interval,
                                 $status,
-                                $failure_fallback);
+                                $failure_callback);
     }
 }
