@@ -136,11 +136,9 @@ class MemcacheShim
      */
     public function close()
     {
-        return $this->if_connected(function () {
             $status = $this->_memcached->quit();
             unset($this->_memcached);
             return $status;
-        }, false);
     }
 
     /**
@@ -176,7 +174,7 @@ class MemcacheShim
      * @param string $key
      * @param int $value
      *
-     * @return mixed item's new value on success or FALSE on failure.
+     * @return false|int item's new value on success or FALSE on failure.
      */
     public function decrement($key, $value = 1)
     {
@@ -192,7 +190,7 @@ class MemcacheShim
      * @param string $key
      * @param int $value
      *
-     * @return mixed item's new value on success or FALSE on failure.
+     * @return false|int item's new value on success or FALSE on failure.
      */
     public function increment($key, $value = 1)
     {
