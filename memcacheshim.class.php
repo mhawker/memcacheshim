@@ -79,7 +79,7 @@ class MemcacheShim
      *
      * @param string $key the key that will be associated with the item.
      * @param mixed $var the variable to store
-     * @param int $flags ignored, use Memcached::OPT_COMPRESSION in memcacheshim_options
+     * @param int $flag ignored, use Memcached::OPT_COMPRESSION in memcacheshim_options
      * @param int $expire
      *
      * @return bool true on success, false on failure
@@ -96,12 +96,12 @@ class MemcacheShim
      * @param string $host the memcached server host
      * @param int $port the port to connect to
      * @param bool $persistent ignored, use constant MEMCACHESHIM_PERSISTENT_ID
-     * @param int weight the weight of the server
-     * @param int timeout ignored, set Memcached::OPT_CONNECT_TIMEOUT in memcacheshim_options
-     * @param int retry_interval ignored, set Memcached::OPT_RETRY_TIMEOUT in memcacheshim_options
-     * @param bool status set to false and the server will not be added
-     * @param callable $failure callback callback to call if connection failed
-     * @param int timeoutms ignored
+     * @param int $weight the weight of the server
+     * @param int $timeout ignored, set Memcached::OPT_CONNECT_TIMEOUT in memcacheshim_options
+     * @param int $retry_interval ignored, set Memcached::OPT_RETRY_TIMEOUT in memcacheshim_options
+     * @param bool $status set to false and the server will not be added
+     * @param callable $failure_callback callback to call if connection failed
+     * @param int $timeoutms ignored
      *
      * @return bool true on success, false on failure
      */
@@ -154,7 +154,7 @@ class MemcacheShim
     public function connect($host, $port = 11211, $timeout = 0)
     {
         $this->addServer($host, $port);
-        return $this->is_connected($host, $port);
+        return $this->server_is_connected($host, $port);
     }
 
     /**
@@ -187,6 +187,22 @@ class MemcacheShim
     }
 
     /**
+     * Increment item's value
+     *
+     * @param string $key
+     * @param int $value
+     *
+     * @return mixed item's new value on success or FALSE on failure.
+     */
+    public function increment($key, $value = 1)
+    {
+        return $this->_memcached->get($key) === false
+            ? false
+            : $this->_memcached->increment($key, $value)
+            ;
+    }
+
+    /**
      * Delete item from the server
      *
      * @param string $key the item key
@@ -215,7 +231,7 @@ class MemcacheShim
      * @param string|array $key the item key or array of keys
      * @param int $flags ignored, use Memcached::OPT_COMPRESSION in memcacheshim_options
      *
-     * @return the item value, or false if not set
+     * @return mixed the item value, or false if not set
      */
     public function get($key, $flags = 0)
     {
@@ -278,7 +294,7 @@ class MemcacheShim
      * Replace an existing item's value
      *
      * @param string $key
-     * @param int $value
+     * @param int $var
      * @param int $flags ignored, use Memcached::OPT_COMPRESSION in memcacheshim_options
      * @param int $expire
      *
@@ -293,7 +309,7 @@ class MemcacheShim
      * Store data at the server
      *
      * @param string $key
-     * @param int $value
+     * @param int $var
      * @param int $flags ignored, use Memcached::OPT_COMPRESSION in memcacheshim_options
      * @param int $expire
      *
@@ -333,6 +349,6 @@ class MemcacheShim
                                 $timeout,
                                 $retry_interval,
                                 $status,
-                                $failure_fallback);
+                                $failure_callback);
     }
 }
