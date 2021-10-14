@@ -1,0 +1,12 @@
+{
+    "name": "mhawker/memcacheshim",
+    "description": "MemcacheShim is a backfill that provides compatibility for code that requires the Memcache class, but is running on a server to a server that does not have it installed and does have Memcached.",
+    "authors": [
+        {
+            "name": "Matthew Hawker",
+            "email": "matthew.hawker@mbasolvay.net"
+        }
+    ],
+    "license": "MIT",
+    "require": {}
+}
